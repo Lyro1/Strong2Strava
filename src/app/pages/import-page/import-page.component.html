@@ -1,0 +1,48 @@
+
+<div class="container" *ngIf="!isLoggedIn">
+  <button (click)="getStravaAuthorization()" class="btn-orange btn-strava">
+    Login to Strava
+    <img src="assets/strava_icon_2.png" alt="Strava"/>
+  </button>
+</div>
+
+<div class="container" *ngIf="isLoggedIn">
+  <div class="how-to-import" *ngIf="!dataIsLoaded">
+    <h2>How to export your Strong activity</h2>
+    <div class="iphone">
+      <img src="assets/iphone.png"/>
+      <video src="assets/how-to-export.mov" autoplay muted loop></video>
+    </div>
+    <div class="overlay"></div>
+  </div>
+  <div class="button btn-blue file-selector" *ngIf="!dataIsLoaded">
+    Load Strong activity
+    <input type="file" (change)="fileChange($event)"/>
+  </div>
+
+  <div class="accordion" *ngIf="trainings && trainings.length > 0" id="trainings">
+    <h2><img src="assets/strong_icon.png" alt="Strong"/>Strong activities</h2>
+    <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+      <ngb-panel *ngFor="let training of trainings.reverse();">
+        <ng-template ngbPanelTitle>
+          <b>{{training.name}}</b> - {{training.date.toLocaleDateString()}}
+        </ng-template>
+        <ng-template ngbPanelContent>
+          <p [innerHTML]="getTrainingDescriptionInStrava(training)"></p>
+          <button (click)="importTrainingToStrava(training)"
+                  class="btn-orange btn-strava"
+                  *ngIf="dataIsLoaded && !isTrainingAlreadyInStrava(training)">
+            Import this training to Strava
+            <img src="assets/strava_icon_2.png" alt="Strava"/>
+          </button>
+          <p *ngIf="dataIsLoaded && isTrainingAlreadyInStrava(training)" class="already-imported">
+            Activity already imported in Strava!
+            <img src="assets/strava_icon_2.png" alt="Strava"/>
+          </p>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+
+  </div>
+</div>
+

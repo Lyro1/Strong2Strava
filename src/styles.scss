@@ -1,1 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+
+
+@import 'node_modules/bootstrap/scss/bootstrap';
+@import "style/_variables.scss";
+@import "style/_button.scss";
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  background: #1f2629;
+  color: white;
+}

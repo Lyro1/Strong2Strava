@@ -1,0 +1,67 @@
+.how-to-import {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  padding-top: 5vh;
+
+  h2 {
+    text-align: center;
+  }
+
+  .iphone {
+    position: relative;
+    width: 60%;
+    margin: 0 auto;
+
+    img {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 2;
+    }
+
+    video {
+      position: absolute;
+      width: 92%;
+      top: 6px;
+      left: 4%;
+      border-radius: 28px;
+    }
+  }
+
+  .overlay {
+    position: absolute;
+    bottom: 5vh;
+    height: 25vh;
+    width: 100%;
+    background: rgb(31,38,41);
+    background: linear-gradient(0deg, #1f2629 15%, rgba(255,255,255,0) 100%);
+    z-index: 4;
+  }
+}
+
+.accordion {
+  h2 {
+    padding-top: 24px;
+
+    img {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      margin-right: 8px;
+    }
+  }
+}
+
+.already-imported {
+  background-color: var(--orange);
+  border-radius: 12px;
+  width: 100%;
+  padding: 12px 24px;
+  color: white;
+
+  img {
+    height: 24px;
+    filter: invert(1);
+  }
+}

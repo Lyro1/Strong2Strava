@@ -1,0 +1,43 @@
+
+button, .button, .btn, .btn:hover {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 24px;
+  border-radius: var(--btn-border-radius);
+  border: none;
+
+  img {
+    height: 24px;
+  }
+}
+
+.btn-blue {
+  background-color: var(--blue);
+  color: white;
+}
+
+.btn-orange {
+  background-color: var(--orange);
+  color: white;
+}
+
+.btn-strava {
+  img {
+    filter: invert(1);
+  }
+}
+
+.file-selector {
+  position: relative;
+  input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    margin-top: -12px;
+    border-radius: 12px;
+  }
+}
