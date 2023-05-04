@@ -65,3 +65,11 @@
     filter: invert(1);
   }
 }
+
+.container-not-logged-in {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px 0;
+}

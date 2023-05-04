@@ -13,7 +13,7 @@ export class StravaService {
   private client_id = 99768;
   private client_secret = "e7ed049f182611bcc463cab19e4c720c4edc78c4";
   private base_url = "https://www.strava.com/";
-  private redirect_uri = "http://localhost:4200/authorize";
+  private redirect_uri = "https://lyro1.github.io/Strong2Strava/authorize";
   private response_type = "code";
   private approval_prompt = "auto";
   private scope = "activity:write,activity:read_all";

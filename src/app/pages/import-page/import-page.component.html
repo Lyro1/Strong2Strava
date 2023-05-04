@@ -1,5 +1,15 @@
 
-<div class="container" *ngIf="!isLoggedIn">
+<div class="container container-not-logged-in" *ngIf="!isLoggedIn">
+
+  <div class="top">
+    <h1>Welcome to Strong2Strava</h1>
+
+    <p>
+      You can import your Strong exercises into Strava in a few clicks, just by connecting
+      to your Strava account and importing your Strong history.
+    </p>
+  </div>
+
   <button (click)="getStravaAuthorization()" class="btn-orange btn-strava">
     Login to Strava
     <img src="assets/strava_icon_2.png" alt="Strava"/>
