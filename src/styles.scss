@@ -5,10 +5,17 @@
 @import "style/_variables.scss";
 @import "style/_button.scss";
 
-body {
+html {
   width: 100%;
   min-height: 100vh;
   margin: 0;
+  background: #1f2629;
+  color: white;
+}
+
+body {
+  max-width: 600px;
+  margin: 0 auto;
   background: #1f2629;
   color: white;
 }
