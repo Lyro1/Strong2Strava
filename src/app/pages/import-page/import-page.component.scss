@@ -43,6 +43,7 @@
 .accordion {
   h2 {
     padding-top: 24px;
+    margin-bottom: 50px;
 
     img {
       width: 28px;
@@ -64,6 +65,11 @@
     height: 24px;
     filter: invert(1);
   }
+}
+
+.already-imported-all {
+  @extend .already-imported;
+  margin-bottom: 30px !important;
 }
 
 .container-not-logged-in {

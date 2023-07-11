@@ -9,6 +9,7 @@ import { GlobeComponent } from './components/globe/globe.component';
 import { AuthorizeComponent } from './pages/authorize/authorize.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./interceptors/httpInterceptor";
+import { NgOptimizedImage } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -17,12 +18,13 @@ import {AuthInterceptor} from "./interceptors/httpInterceptor";
     GlobeComponent,
     AuthorizeComponent
   ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    AppRoutingModule,
-    NgbModule
-  ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        AppRoutingModule,
+        NgbModule,
+        NgOptimizedImage
+    ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
