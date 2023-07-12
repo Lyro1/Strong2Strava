@@ -24,7 +24,7 @@ export class DurationExtractor {
   }
 
   private extractUnit(type: 'min' | 'm' | 'h', pattern: string): number {
-    const regexTemplate = `([1-9]+)${type}`;
+    const regexTemplate = `([0-9]+)${type}`;
     const regex = new RegExp(regexTemplate, 'gm');
     const result = regex.exec(pattern);
     if (!result || result?.length <= 1) {
