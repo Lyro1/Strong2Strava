@@ -1,4 +1,3 @@
-
 <div class="container container-not-logged-in" *ngIf="!isLoggedIn">
 
   <div class="top">
@@ -32,6 +31,15 @@
 
   <div class="accordion" *ngIf="trainings && trainings.length > 0" id="trainings">
     <h2><img src="assets/strong_icon.png" alt="Strong"/>Strong activities</h2>
+    <button *ngIf="notImportedTrainings.length" (click)="importTrainingsToStrava(notImportedTrainings)"
+            class="btn-orange btn-strava-all">
+      Import {{notImportedTrainings.length}} trainings to Strava
+      <img ngSrc="assets/strava_icon_2.png" alt="Strava" height="24" width="24"/>
+    </button>
+    <p *ngIf="!notImportedTrainings.length" class="already-imported-all">
+      Activities already imported in Strava!
+      <img src="assets/strava_icon_2.png" alt="Strava"/>
+    </p>
     <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
       <ngb-panel *ngFor="let training of trainings.reverse();">
         <ng-template ngbPanelTitle>

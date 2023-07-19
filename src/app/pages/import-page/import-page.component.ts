@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {StravaService} from "../../services/strava/strava.service";
-import {StravaToken} from "../authorize/authorize.component";
-import {DetailledActivity, SummaryActivity} from "../../services/strava/models/Activity.model";
+import { Component, OnInit } from '@angular/core';
+import { StravaService } from "../../services/strava/strava.service";
+import { StravaToken } from "../authorize/authorize.component";
+import { SummaryActivity } from "../../services/strava/models/Activity.model";
+import { DurationExtractor } from '../../tools/duration-extractor/duration-extractor';
 
 export interface Training {
   date: Date
@@ -22,8 +23,8 @@ export interface Rep {
   reps: number,
   distance: number,
   seconds: number,
-  notes: string|null
-  RPE: number|null
+  notes: string | null
+  RPE: number | null
 }
 
 @Component({
@@ -38,6 +39,7 @@ export class ImportPageComponent implements OnInit {
   public file: any;
   public fileContent: any;
   public trainings: Training[] = [];
+  public notImportedTrainings: Training[] = [];
   public stravaActivities: SummaryActivity[] = [];
 
   constructor(private stravaService: StravaService) {
@@ -50,7 +52,7 @@ export class ImportPageComponent implements OnInit {
       return;
     }
     const expiresAt = localStorage.getItem(StravaToken.expires_at);
-    if (expiresAt === undefined || expiresAt === null ) {
+    if (expiresAt === undefined || expiresAt === null) {
       this.stravaService.removeStravaLocalStorage();
       this.isLoggedIn = false;
       return;
@@ -80,12 +82,12 @@ export class ImportPageComponent implements OnInit {
       this.fileContent = this.fileContent.split('\n').slice(1).map((line: string) => this.getObjectFromArray(line.replaceAll('\"', '').split(',')));
       this.fileContent.pop();
       this.trainings = this.parseAllTrainings(this.fileContent);
+      this.notImportedTrainings = this.trainings.filter(t => !this.isTrainingAlreadyInStrava(t));
     }
     fileReader.readAsText(file);
   }
 
-  private getObjectFromArray(data: any): any
-  {
+  private getObjectFromArray(data: any): any {
     return {
       date: data[0],
       trainingName: data[1],
@@ -102,13 +104,14 @@ export class ImportPageComponent implements OnInit {
     };
   }
 
-  private parseAllTrainings(objects: any[])
-  {
+  private parseAllTrainings(objects: any[]) {
     let trainings: Training[] = [];
     objects.forEach((object, index) => {
       // Create Training if needed, find it if it exists
       let objectDate: Date = new Date(object.date);
-      let trainingIndex = trainings.findIndex(function(training, index) { return training.date.getTime() === objectDate.getTime()});
+      let trainingIndex = trainings.findIndex(function (training, index) {
+        return training.date.getTime() === objectDate.getTime()
+      });
       if (trainingIndex === -1) {
         const training = this.createTraining(object);
         if (training !== null) {
@@ -119,7 +122,9 @@ export class ImportPageComponent implements OnInit {
 
       // Create Exercise if needed, find it if it exists
       let exerciseName: string = object.exerciseName;
-      let exerciseIndex = trainings[trainingIndex].exercises.findIndex(function(exercise, index) {return exercise.name === exerciseName});
+      let exerciseIndex = trainings[trainingIndex].exercises.findIndex(function (exercise, index) {
+        return exercise.name === exerciseName
+      });
       if (exerciseIndex === -1) {
         const exercise = this.createExercise(object);
         if (exercise !== null) {
@@ -138,7 +143,7 @@ export class ImportPageComponent implements OnInit {
     return trainings;
   }
 
-  private createTraining(object: any): Training|null {
+  private createTraining(object: any): Training | null {
     if (!('date' in object) || !('trainingName' in object) || !('duration' in object) || !('trainingNotes' in object)) {
       console.error('Object has missing properties (needs \'date\', \'trainingName\', \'duration\', \'trainingNotes\').')
       return null;
@@ -152,7 +157,7 @@ export class ImportPageComponent implements OnInit {
     } as Training;
   }
 
-  private createExercise(object: any): Exercise|null {
+  private createExercise(object: any): Exercise | null {
     if (!('exerciseName' in object)) {
       console.error('Object has missing properties (needs \'exerciseName\').')
       return null;
@@ -163,9 +168,9 @@ export class ImportPageComponent implements OnInit {
     } as Exercise;
   }
 
-  private createRep(object: any): Rep|null {
+  private createRep(object: any): Rep | null {
     if (!('order' in object) || !('weight' in object) || !('reps' in object) || !('distance' in object)
-    || !('seconds' in object) || !('notes' in object) || !('RPE' in object)) {
+      || !('seconds' in object) || !('notes' in object) || !('RPE' in object)) {
       console.error('Object has missing properties (needs \'order\', \'weight\', \'reps\', \'distance\', \'seconds\', \'notes\', \'RPE\').')
       return null;
     }
@@ -184,15 +189,8 @@ export class ImportPageComponent implements OnInit {
     if (duration === undefined || duration === null) {
       return -1;
     }
-    let nbOfSeconds = 0;
-    if (duration.indexOf('h') !== -1) {
-     nbOfSeconds += parseInt(duration.substring(0, duration.indexOf('h'))) * 60 * 60;
-     duration = duration.substring(duration.indexOf('h') + 1);
-    }
-    if (duration !== '') {
-      nbOfSeconds += parseInt(duration.substring(0, duration.indexOf('min'))) * 60;
-    }
-    return nbOfSeconds;
+    const durationExtractor = new DurationExtractor(duration);
+    return durationExtractor.getDurationInSeconds();
   }
 
   public importTrainingToStrava(training: Training) {
@@ -201,13 +199,18 @@ export class ImportPageComponent implements OnInit {
     });
   }
 
+  public importTrainingsToStrava(trainings: Training[]) {
+    trainings.forEach(this.importTrainingToStrava);
+  }
+
   public getTrainingDescriptionInStrava(training: Training): string {
     return this.stravaService.getActivityDescription(training).replace(/\n/g, "<br />");
   }
 
   public isTrainingAlreadyInStrava(training: Training): boolean {
     return this.stravaActivities.findIndex((activity: SummaryActivity) => {
-      return activity.name === training.name && activity.start_date === training.date.toISOString().replace(/\.\d+/, "");;
+      return activity.name === training.name && activity.start_date === training.date.toISOString().replace(/\.\d+/, "");
+      ;
     }) !== -1;
   }
 

@@ -29,6 +29,11 @@ button, .button, .btn, .btn:hover {
   }
 }
 
+.btn-strava-all {
+  @extend .btn-strava;
+  margin-bottom: 30px;
+}
+
 .file-selector {
   position: relative;
   input {
